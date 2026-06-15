@@ -4,5 +4,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 *:Zone.Identifier
-*.pdf 
+*.pdf
 data/
+lectures/
