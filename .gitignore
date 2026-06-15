@@ -4,4 +4,5 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 *:Zone.Identifier
-reviews_Cell_Phones_and_Accessories_5.json
+*.pdf 
+data/
