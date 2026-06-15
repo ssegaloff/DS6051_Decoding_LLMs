@@ -1,0 +1,19 @@
+# Week 1 Requirements
+# week_1_word2vec.ipynb + week_1_sentiment_classifier.ipynb
+
+gensim
+numpy
+pandas
+nltk
+spacy
+umap-learn
+plotly
+matplotlib
+scikit-learn
+seaborn
+
+# After installing spacy, download the English model:
+# python -m spacy download en_core_web_sm
+#
+# After installing nltk, download stopwords corpus:
+# python -c "import nltk; nltk.download('stopwords')"

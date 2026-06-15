@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.DS_Store
+*:Zone.Identifier
+reviews_Cell_Phones_and_Accessories_5.json
