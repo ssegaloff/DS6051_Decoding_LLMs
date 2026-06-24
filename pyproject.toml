@@ -21,6 +21,7 @@ dependencies = [
     "sentencepiece>=0.2.1",
     "spacy>=3.8.14",
     "torch>=2.12.1",
+    "torchinfo>=1.8.0",
     "transformers>=5.12.1",
     "umap-learn>=0.5.12",
 ]
