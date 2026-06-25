@@ -8,3 +8,4 @@ __pycache__/
 data/
 lectures/
 tokenizers/outputs/*.pt
+output/*.pt
