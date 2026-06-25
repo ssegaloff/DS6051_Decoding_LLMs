@@ -93,31 +93,33 @@ change that points in many independent directions, you need a high-rank matrix.
 If the change you need only points in a few directions, a low-rank matrix
 suffices — and a low-rank matrix is cheap to store and cheap to train.
 
-### Why $\operatorname{rank}(AB) \le \min(\operatorname{rank}(A),\operatorname{rank}(B))$
+### Why $\operatorname{rank}(PQ) \le \min(\operatorname{rank}(P),\operatorname{rank}(Q))$
 
 This inequality is the load-bearing fact for LoRA, so we prove it both ways.
+We use generic names $P$ and $Q$ here to avoid any conflict with the $B$ (tall)
+and $A$ (wide) convention LoRA introduces in Section 5.
 
-Let $A \in \mathbb{R}^{d \times r}$ and $B \in \mathbb{R}^{r \times k}$, so the
-product $AB$ is $d \times k$. Write the product as the composed map
-$x \mapsto A(Bx)$.
+Let $P \in \mathbb{R}^{d \times r}$ and $Q \in \mathbb{R}^{r \times k}$, so the
+product $PQ$ is $d \times k$. Write the product as the composed map
+$x \mapsto P(Qx)$.
 
-**Bound by $\operatorname{rank}(B)$ (the columns argument).** Each column of $AB$
-is $A$ applied to the corresponding column of $B$ — that is, each column of $AB$
-is a linear combination of the columns of $A$ with coefficients drawn from a
-column of $B$. So every column of $AB$ lives in the column space of $A$, which
-gives $\operatorname{rank}(AB) \le \operatorname{rank}(A)$.
+**Bound by $\operatorname{rank}(P)$ (the columns argument).** Each column of $PQ$
+is $P$ applied to the corresponding column of $Q$ — that is, each column of $PQ$
+is a linear combination of the columns of $P$ with coefficients drawn from a
+column of $Q$. So every column of $PQ$ lives in the column space of $P$, which
+gives $\operatorname{rank}(PQ) \le \operatorname{rank}(P)$.
 
 **Bound by the intermediate dimension (the bottleneck argument).** Reading the
-composition left to right: $B$ first maps the input into $\mathbb{R}^r$, and
-then $A$ maps that into $\mathbb{R}^d$. Whatever $A$ does afterward, its input
+composition left to right: $Q$ first maps the input into $\mathbb{R}^r$, and
+then $P$ maps that into $\mathbb{R}^d$. Whatever $P$ does afterward, its input
 already lives in a space of dimension at most $r$, and a linear map cannot
 *increase* the dimension of a subspace — it can only preserve or collapse it.
-So the image of $AB$ has dimension at most $r$, hence at most
-$\operatorname{rank}(B)$ (which is itself $\le r$). Combining,
-$\operatorname{rank}(AB) \le \min(\operatorname{rank}(A), \operatorname{rank}(B)) \le r$.
+So the image of $PQ$ has dimension at most $r$, hence at most
+$\operatorname{rank}(Q)$ (which is itself $\le r$). Combining,
+$\operatorname{rank}(PQ) \le \min(\operatorname{rank}(P), \operatorname{rank}(Q)) \le r$.
 
 The phrase to remember is **information bottleneck**. No matter how expressive
-$A$ and $B$ are individually, routing the signal through an $r$-dimensional
+$P$ and $Q$ are individually, routing the signal through an $r$-dimensional
 waist between them caps the rank of their product at $r$. You cannot reconstruct
 more independent directions on the far side than survived the squeeze in the
 middle.
@@ -126,8 +128,9 @@ middle.
 
 LoRA represents a weight *update* as a product $\Delta W = BA$ with
 $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$, where $r$ is
-small (often 4, 8, 16) and $\min(d,k)$ is large (often thousands). By the
-inequality above, $\operatorname{rank}(\Delta W) \le r$. The update is
+small (often 4, 8, 16) and $\min(d,k)$ is large (often thousands). Identifying
+$B$ with the left factor $P$ and $A$ with the right factor $Q$ from the proof
+above, $\operatorname{rank}(\Delta W) = \operatorname{rank}(BA) \le r$. The update is
 *structurally incapable* of being anything but low rank — it is forced through
 the $r$-dimensional waist. The parameter count drops from $dk$ (a full update)
 to $r(d+k)$ (the two factors), and the whole bet is that the update a model
@@ -331,9 +334,14 @@ frozen base weights in **4-bit** precision instead of 16-bit.
 - **Optimizer state:** ~0.8 bits.
 - **Adapter weights:** ~0.4 bits.
 
-Total: ~**5.2 bits per parameter** — that is, $4 + 1.6$, where the 1.6 bits of
-trainable overhead is unchanged from LoRA and the base-weight term has dropped
-from 16 to 4.
+Total: ~**5.2 bits per parameter** (as the slide states). Note that the four
+listed components — 4 + 0.4 + 0.8 + 0.4 — sum to ~5.6, not 5.2; the slide
+carries the same inconsistency. The 42 GB figure is consistent with 5.2 bits,
+so the total and the GB footprint are internally consistent with each other; the
+per-component breakdown is approximate and the ~0.4/~0.8 figures are themselves
+rounded, so the small discrepancy is an artifact of rounding. The structural
+point stands: the trainable overhead (~1.6 bits, unchanged from LoRA) is now
+paired with a 4-bit base rather than a 16-bit one.
 
 For the 65B model:
 
@@ -410,10 +418,11 @@ modules, so the only per-task cost is the adapters.
 ### How they work
 
 The deck's diagram (Houlsby et al.) shows the architecture. Inside each
-transformer layer, **two** adapter modules are inserted: one immediately after
-the multi-head attention sublayer's feed-forward projection, and one after the
-layer's main feed-forward sublayer — each placed before its residual add and
-layer norm. Every original transformer weight is frozen; only the adapters
+transformer layer, **two** adapter modules are inserted. Reading bottom-up: the
+attention sublayer feeds into a residual add, and the adapter sits immediately
+*after* that add but *before* the subsequent Layer Norm. The same pattern repeats
+after the feed-forward sublayer: feed-forward → residual add → **Adapter** →
+Layer Norm. Every original transformer weight is frozen; only the adapters
 train.
 
 Each adapter is a **bottleneck**: it takes the $d$-dimensional hidden vector,
