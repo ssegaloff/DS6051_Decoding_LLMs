@@ -7,5 +7,5 @@ __pycache__/
 *.pdf
 data/
 lectures/
-tokenizers/outputs/*.pt
+tokenizers/
 output/*.pt
