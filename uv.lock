@@ -742,9 +742,11 @@ dependencies = [
     { name = "sentence-transformers" },
     { name = "sentencepiece" },
     { name = "spacy" },
+    { name = "tabulate" },
     { name = "torch" },
     { name = "torchinfo" },
     { name = "torchview" },
+    { name = "torchviz" },
     { name = "transformers" },
     { name = "umap-learn" },
 ]
@@ -767,9 +769,11 @@ requires-dist = [
     { name = "sentence-transformers", specifier = ">=5.6.0" },
     { name = "sentencepiece", specifier = ">=0.2.1" },
     { name = "spacy", specifier = ">=3.8.14" },
+    { name = "tabulate", specifier = ">=0.10.0" },
     { name = "torch", specifier = ">=2.12.1" },
     { name = "torchinfo", specifier = ">=1.8.0" },
     { name = "torchview", specifier = ">=0.2.7" },
+    { name = "torchviz", specifier = ">=0.0.3" },
     { name = "transformers", specifier = ">=5.12.1" },
     { name = "umap-learn", specifier = ">=0.5.12" },
 ]
@@ -3370,6 +3374,15 @@ wheels = [
 ]
 
 [[package]]
+name = "tabulate"
+version = "0.10.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/46/58/8c37dea7bbf769b20d58e7ace7e5edfe65b849442b00ffcdd56be88697c6/tabulate-0.10.0.tar.gz", hash = "sha256:e2cfde8f79420f6deeffdeda9aaec3b6bc5abce947655d17ac662b126e48a60d", size = 91754, upload-time = "2026-03-04T18:55:34.402Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/99/55/db07de81b5c630da5cbf5c7df646580ca26dfaefa593667fc6f2fe016d2e/tabulate-0.10.0-py3-none-any.whl", hash = "sha256:f0b0622e567335c8fabaaa659f1b33bcb6ddfe2e496071b743aa113f8774f2d3", size = 39814, upload-time = "2026-03-04T18:55:31.284Z" },
+]
+
+[[package]]
 name = "terminado"
 version = "0.18.1"
 source = { registry = "https://pypi.org/simple" }
@@ -3523,6 +3536,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/f0/45/f76ac5a2a49f3a5831ddde2e7e6b58fe423b434075e812559976a2122560/torchview-0.2.7.tar.gz", hash = "sha256:c5898fd03d256333c9827000c1f83e1052fbcfc1066032d86b30d429dd942f7c", size = 25697, upload-time = "2025-04-22T20:47:27.49Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/17/66/b87d835f664f0f99a0bf1e2e294c45d286545fed35b96f2c99e700915dd9/torchview-0.2.7-py3-none-any.whl", hash = "sha256:c7f3a9d16138c20b606900ecbf46d01489f2b8c77ed97e71293883bc606c2be0", size = 26103, upload-time = "2025-04-22T20:47:26.12Z" },
+]
+
+[[package]]
+name = "torchviz"
+version = "0.0.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "graphviz" },
+    { name = "torch" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5c/80/a84e0e8877630262c3f4c8d2e7fd0647c6751afeca301cfc04a1b65ac820/torchviz-0.0.3.tar.gz", hash = "sha256:2e95f2fea7a31ec9549f2d6bbf446d75aeb6a9880fcf13e7dd843fdcdb4a3725", size = 5705, upload-time = "2024-12-02T02:46:54.671Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5e/06/bea648249802b65282414caf5e7bc94fcb6e5a3e311b537845417d19edb9/torchviz-0.0.3-py3-none-any.whl", hash = "sha256:5eab98d17cbe8a54727cfa6a527681cff613430fff8fc68f52302ca5fa26cdf1", size = 5708, upload-time = "2024-12-02T02:46:52.838Z" },
 ]
 
 [[package]]
